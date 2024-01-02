@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SportingGoods</string>
+    <string name="title_home">Inicio</string>
+    <string name="title_forecast">Pronostico</string>
+
+    <string name="label_wind">Viento</string>
+    <string name="label_feels_like">Sensación térmica: %1$s</string>
+
+    <string name="label_wind_speed">Velocidad del viento</string>
+
+    <string name="label_high_temp">Max Temp: %1$s°</string>
+    <string name="label_lo_temp">Min Temp: %1$s°</string>
+
+
+    <string name="button_give_location_permissions">Dar permisos de ubicación</string>
+
+    <string name="no_content_please_refresh">No hay información meteorológica disponible en este momento, por favor, actualiza la página.</string>
+
+    <string name="error_no_location_provided">Esta aplicación necesita acceder a tu ubicación para mostrar el pronóstico del tiempo.</string>
+    <string name="error_no_location_provided_do_not_ask_again">¡Hola!\n\nPara mostrarte el pronóstico del tiempo, necesitamos tu ubicación.\n\n¿Podrías habilitarla en la configuración por favor?\n\n¡Gracias</string>
+    <string name="error_generic">Pedimos disculpas por las molestias. Desafortunadamente, ocurrió algo inesperado. Por favor, inténtalo nuevamente más tarde.</string>
+</resources>

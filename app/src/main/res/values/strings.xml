@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">SportingGoods</string>
+    <string name="title_home">Home</string>
+    <string name="title_forecast">Forecast</string>
+
+    <string name="label_wind">Wind</string>
+    <string name="label_feels_like">Feels like: %1$s</string>
+    <string name="label_wind_speed">Wind Speed</string>
+    <string name="label_high_temp">Hi Temp: %1$s°</string>
+    <string name="label_lo_temp">Lo Temp: %1$s°</string>
+
+    <string name="button_give_location_permissions">Give location permission</string>
+
+    <string name="no_content_please_refresh">We regret to inform you that there is currently no available weather information. Please refresh the page or try again later.</string>
+
+    <string name="error_no_location_provided">This app requires access to your location to show weather forecasts.</string>
+    <string name="error_no_location_provided_do_not_ask_again">Hey!\n\nTo show you the weather forecast, we need your location.\n\nCan you enable it in settings for us?\n\nThanks!</string>
+    <string name="error_generic">We apologize for the inconvenience. Unfortunately, something unexpected occurred. Please try again later.</string>
+</resources>
