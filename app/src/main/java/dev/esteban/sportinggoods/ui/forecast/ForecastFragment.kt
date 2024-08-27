@@ -16,8 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.esteban.common.utils.ScreenState
 import dev.esteban.sportinggoods.R
 import dev.esteban.sportinggoods.databinding.FragmentForecastBinding
-import dev.esteban.sportinggoods.ui.home.HomeError
-import dev.esteban.sportinggoods.utils.findActivity
 
 @AndroidEntryPoint
 class ForecastFragment : Fragment() {

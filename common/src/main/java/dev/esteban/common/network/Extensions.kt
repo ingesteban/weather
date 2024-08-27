@@ -1,27 +1,30 @@
-package dev.esteban.sportinggoods.utils
+package dev.esteban.common.network
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
+import kotlin.math.roundToInt
 
 fun String.getUrlImage(): String {
     return "https://openweathermap.org/img/wn/$this@2x.png"
 }
 
 fun Double.getFormattedSpeed(): String {
-    return "$this mph"
+    return "${this.roundToInt()} mph"
 }
 
 fun Double.toDegree(): String {
-    return "$this°"
+    return "${this.roundToInt()}°"
 }
 
 fun Double.toFahrenheitDegree(): String {
-    return "$this°F"
+    return "${this.roundToInt()}°F"
 }
 
 fun Calendar.getStartOfCurrentDay(): Long {
@@ -61,17 +64,6 @@ fun Long.getHourFormattedDate(context: Context): String {
     }
 }
 
-fun Long.getFormattedDate(context: Context): String {
-    return try {
-        val sdf = SimpleDateFormat("EE ,MMMM dd", context.resources.configuration.locales.get(0))
-        sdf.timeZone = TimeZone.getDefault()
-        val date = Date(this * 1000)
-        sdf.format(date)
-    } catch (e: Exception) {
-        e.toString()
-    }
-}
-
 fun Context.findActivity(): Activity {
     var context = this
     while (context is ContextWrapper) {
@@ -79,4 +71,12 @@ fun Context.findActivity(): Activity {
         context = context.baseContext
     }
     throw IllegalStateException("Permissions should be called in the context of an Activity")
+}
+
+@SuppressLint("SimpleDateFormat")
+fun Long.convertLongToDay(): String {
+    val sdf = SimpleDateFormat("EE, MMMM dd")
+    sdf.timeZone = TimeZone.getDefault()
+    val date = Date(this * 1000)
+    return sdf.format(date)
 }

@@ -1,5 +1,6 @@
 package dev.esteban.weather.domain.usecase
 
+import dev.esteban.common.network.convertLongToDay
 import dev.esteban.weather.data.repository.WeatherRepository
 import dev.esteban.weather.domain.model.ForecastWeather
 import kotlinx.coroutines.flow.Flow
@@ -15,31 +16,26 @@ class GetForecastDataUseCase @Inject constructor(
     ): Flow<List<ForecastWeather>> = flow {
         val forecastWeather = weatherRepository.getForecastWeather(latitude, longitude)
 
-        val allDescriptions = forecastWeather.list
-            .flatMap { it.weather }
-            .map {
-                Pair(it.description, it.icon)
-            }
+        val networkForecastWeatherList = forecastWeather.list
+            .groupBy { it.dt.convertLongToDay() }
 
-        val descriptionOccurrences = allDescriptions
-            .groupingBy { it }
-            .eachCount()
-
-        val mostCommonIconDescription = descriptionOccurrences
-            .maxByOrNull { it.value }?.key
-
-        val forecastWeatherList = forecastWeather.list.map {
+        val forecastWeatherList = networkForecastWeatherList.map { networkForecastWeather ->
+            val weatherList = networkForecastWeather.value.flatMap { it.weather }
+            val mostCommonDescription =
+                weatherList.groupingBy { it.description }.eachCount().maxBy { it.value }.key
+            val mostCommonIcon =
+                weatherList.groupingBy { it.icon }.eachCount().maxBy { it.value }.key
             ForecastWeather(
-                highTemp = it.main.tempMax,
-                lowTemp = it.main.tempMin,
-                date = it.dt,
-                windSpeed = it.wind.speed,
-                windDirection = it.wind.deg,
-                windDescription = mostCommonIconDescription?.first
-                    ?: it.weather.first().description,
-                icon = mostCommonIconDescription?.second ?: it.weather.first().icon
+                highTemp = networkForecastWeather.value.maxBy { it.main.tempMax }.main.tempMax,
+                lowTemp = networkForecastWeather.value.minBy { it.main.tempMax }.main.tempMin,
+                date = networkForecastWeather.key,
+                windSpeed = (networkForecastWeather.value.sumOf { it.wind.speed } / networkForecastWeather.value.size),
+                windDirection = networkForecastWeather.value.sumOf { it.wind.deg } / networkForecastWeather.value.size,
+                windDescription = mostCommonDescription,
+                icon = mostCommonIcon
             )
         }
-        emit(forecastWeatherList)
+
+        emit(forecastWeatherList.take(5))
     }
 }

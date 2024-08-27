@@ -42,12 +42,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.esteban.common.utils.ScreenState
 import dev.esteban.sportinggoods.R
-import dev.esteban.sportinggoods.utils.findActivity
-import dev.esteban.sportinggoods.utils.getFormattedSpeed
-import dev.esteban.sportinggoods.utils.getHourFormattedDate
-import dev.esteban.sportinggoods.utils.getWindDirection
-import dev.esteban.sportinggoods.utils.toDegree
-import dev.esteban.sportinggoods.utils.toFahrenheitDegree
+import dev.esteban.common.network.findActivity
+import dev.esteban.common.network.getFormattedSpeed
+import dev.esteban.common.network.getHourFormattedDate
+import dev.esteban.common.network.getWindDirection
+import dev.esteban.common.network.toDegree
+import dev.esteban.common.network.toFahrenheitDegree
 import dev.esteban.weather.domain.model.CurrentWeather
 import dev.esteban.weather.domain.model.CurrentWeatherItem
 

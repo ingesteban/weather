@@ -7,6 +7,7 @@ import dev.esteban.weather.domain.model.CurrentWeatherItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import kotlin.math.round
 
 class GetWeatherDataUseCase @Inject constructor(
     val weatherRepository: WeatherRepository
@@ -24,7 +25,7 @@ class GetWeatherDataUseCase @Inject constructor(
             tempMax = currentWeather.main.tempMax,
             feelsLike = currentWeather.main.feelsLike,
             windDeg = currentWeather.wind.deg,
-            windSpeed = currentWeather.wind.speed,
+            windSpeed = round(currentWeather.wind.speed),
             cityName = currentWeather.name,
             weather = getCurrentNetworkForecastWeatherInfoModelList(
                 forecastWeather.list,
