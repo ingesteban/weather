@@ -1,5 +1,6 @@
 package dev.esteban.weather.domain.usecase
 
+import dev.esteban.common.network.convertLongToDay
 import dev.esteban.weather.data.datasource.remote.model.NetworkCityModel
 import dev.esteban.weather.data.datasource.remote.model.NetworkCloudModel
 import dev.esteban.weather.data.datasource.remote.model.NetworkCoordModel
@@ -10,12 +11,15 @@ import dev.esteban.weather.data.datasource.remote.model.NetworkMainModel
 import dev.esteban.weather.data.datasource.remote.model.NetworkWeatherDetailModel
 import dev.esteban.weather.data.datasource.remote.model.NetworkWindModel
 import dev.esteban.weather.data.repository.WeatherRepository
+import dev.esteban.weather.domain.mapper.WeatherForecastMapper
 import dev.esteban.weather.domain.model.ForecastWeather
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -25,12 +29,13 @@ import org.junit.Test
 
 class GetForecastDataUseCaseTest {
     private val mockWeatherRepository: WeatherRepository = mockk()
+    private val mockWeatherForecastMapper: WeatherForecastMapper = mockk()
     private lateinit var getForecastDataUseCase: GetForecastDataUseCase
 
     @Before
     fun setupBase() {
         MockKAnnotations.init(this)
-        getForecastDataUseCase = GetForecastDataUseCase(mockWeatherRepository)
+        getForecastDataUseCase = GetForecastDataUseCase(mockWeatherRepository, mockWeatherForecastMapper)
     }
 
     @After
@@ -39,84 +44,74 @@ class GetForecastDataUseCaseTest {
     }
 
     @Test
-    fun `test invoke returns NetworkForecastWeatherModel`() = runBlocking {
-        val dummyLatitude = 40.7128
-        val dummyLongitude = -74.0060
-        val fakeNetworkForecastWeatherModel = createFakeNetworkForecastWeatherModel()
-        coEvery {
-            mockWeatherRepository.getForecastWeather(
-                dummyLatitude,
-                dummyLongitude
-            )
-        } returns fakeNetworkForecastWeatherModel
-
-        val result = getForecastDataUseCase(dummyLatitude, dummyLongitude).first()
-
-        val expectedResult = fakeNetworkForecastWeatherModel.list.map {
+    fun `test invoke success`() = runBlocking {
+        val mockNetworkForecastWeatherModel = mockk<NetworkForecastWeatherModel>(relaxed = true)
+        val expectedForecastWeatherList = listOf(
             ForecastWeather(
-                highTemp = it.main.tempMax,
-                lowTemp = it.main.tempMin,
-                date = it.dt,
-                windSpeed = it.wind.speed,
-                windDirection = it.wind.deg,
-                windDescription = it.weather.first().description,
-                icon = it.weather.first().icon
+                highTemp = 25.0,
+                lowTemp = 18.0,
+                date = "2023-12-31",
+                windSpeed = 5.0,
+                windDirection = 45,
+                windDescription = "Breeze",
+                icon = "01d"
             )
-        }
-        assertEquals(expectedResult, result)
-        coVerify { mockWeatherRepository.getForecastWeather(dummyLatitude, dummyLongitude) }
+        )
+        coEvery {
+            mockWeatherRepository.getForecastWeather(any(), any())
+        } returns mockNetworkForecastWeatherModel
+        every { mockWeatherForecastMapper.getForecastWeatherList(any()) } returns expectedForecastWeatherList
+
+        val result = getForecastDataUseCase.invoke(40.0, -74.0).first()
+
+        coVerify {  mockWeatherRepository.getForecastWeather(any(), any()) }
+        verify { mockWeatherForecastMapper.getForecastWeatherList(any()) }
+
+        assertEquals(expectedForecastWeatherList.take(5), result)
     }
 
-    private fun createFakeNetworkForecastWeatherModel(): NetworkForecastWeatherModel {
-        val fakeCity = NetworkCityModel(
-            id = 1,
-            name = "Fake City",
-            coord = NetworkCoordModel(lon = 0.0, lat = 0.0),
-            country = "FC",
-            population = 100000,
-            timezone = 0,
-            sunrise = 0,
-            sunset = 0
+    @Test
+    fun `test invoke with null latitude and longitude`() = runBlocking {
+        val mockNetworkForecastWeatherModel = mockk<NetworkForecastWeatherModel>(relaxed = true)
+        val expectedForecastWeatherList = listOf(
+            ForecastWeather(
+                highTemp = 25.0,
+                lowTemp = 18.0,
+                date = "2023-12-31",
+                windSpeed = 5.0,
+                windDirection = 45,
+                windDescription = "Breeze",
+                icon = "01d"
+            )
         )
+        coEvery {
+            mockWeatherRepository.getForecastWeather(any(), any())
+        } returns mockNetworkForecastWeatherModel
+        every { mockWeatherForecastMapper.getForecastWeatherList(any()) } returns expectedForecastWeatherList
 
-        val fakeWeatherInfoModel = NetworkForecastWeatherInfoModel(
-            dt = 1234567890,
-            main = NetworkMainModel(
-                temp = 25.0,
-                feelsLike = 28.0,
-                tempMin = 20.0,
-                tempMax = 30.0,
-                pressure = 1013,
-                humidity = 50
-            ),
-            weather = listOf(
-                NetworkWeatherDetailModel(
-                    id = 800,
-                    main = "Clear",
-                    description = "clear sky",
-                    icon = "01d"
-                )
-            ),
-            clouds = NetworkCloudModel(all = 0),
-            wind = NetworkWindModel(speed = 3.0, deg = 120),
-            visibility = 10000,
-            pop = 0.0,
-            sys = NetworkForecastSysModel(pod = "d"),
-            dtTxt = "2023-01-01 12:00:00"
-        )
+        val result = getForecastDataUseCase.invoke(null, null).first()
 
-        return NetworkForecastWeatherModel(
-            cod = "200",
-            message = 0,
-            cnt = 1,
-            list = listOf(
-                fakeWeatherInfoModel,
-                fakeWeatherInfoModel,
-                fakeWeatherInfoModel,
-                fakeWeatherInfoModel,
-                fakeWeatherInfoModel
-            ),
-            city = fakeCity
-        )
+        coVerify {  mockWeatherRepository.getForecastWeather(null, null) }
+        verify { mockWeatherForecastMapper.getForecastWeatherList(any()) }
+
+        assertEquals(expectedForecastWeatherList.take(5), result)
     }
+
+    @Test
+    fun `test invoke with empty forecast list`() = runBlocking {
+        val mockNetworkForecastWeatherModel = mockk<NetworkForecastWeatherModel>(relaxed = true)
+        val expectedForecastWeatherList = emptyList<ForecastWeather>()
+        coEvery {
+            mockWeatherRepository.getForecastWeather(any(), any())
+        } returns mockNetworkForecastWeatherModel
+        every { mockWeatherForecastMapper.getForecastWeatherList(any()) } returns expectedForecastWeatherList
+
+        val result = getForecastDataUseCase.invoke(40.0, -74.0).first()
+
+        coVerify {  mockWeatherRepository.getForecastWeather(any(), any()) }
+        verify { mockWeatherForecastMapper.getForecastWeatherList(any()) }
+
+        assertEquals(expectedForecastWeatherList.take(5), result)
+    }
+
 }
