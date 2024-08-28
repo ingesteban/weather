@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.esteban.weather.data.repository.WeatherRepositoryImpl
 import dev.esteban.weather.data.repository.WeatherRepository
+import dev.esteban.weather.data.repository.WeatherRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

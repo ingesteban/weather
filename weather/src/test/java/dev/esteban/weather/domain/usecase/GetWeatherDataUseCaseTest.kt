@@ -13,8 +13,6 @@ import dev.esteban.weather.data.datasource.remote.model.NetworkWeatherDetailMode
 import dev.esteban.weather.data.datasource.remote.model.NetworkWindModel
 import dev.esteban.weather.data.repository.WeatherRepository
 import dev.esteban.weather.domain.model.CurrentWeather
-import dev.esteban.weather.domain.model.CurrentWeatherItem
-import dev.esteban.weather.domain.model.ForecastWeather
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify

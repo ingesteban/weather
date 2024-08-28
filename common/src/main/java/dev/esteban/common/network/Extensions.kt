@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date

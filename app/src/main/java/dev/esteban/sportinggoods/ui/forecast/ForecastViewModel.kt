@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.esteban.common.network.Dispatcher
 import dev.esteban.common.network.SportingGodsDispatchers
 import dev.esteban.common.utils.ScreenState
-import dev.esteban.sportinggoods.ui.home.HomeError
 import dev.esteban.sportinggoods.utils.LocationUtility
 import dev.esteban.weather.domain.usecase.GetForecastDataUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -39,22 +38,22 @@ class ForecastViewModel @Inject constructor(
                 location.latitude,
                 location.longitude,
             ).map { forecastWeatherList ->
-                    _uiState.postValue(
-                        uiState.value?.copy(
-                            screenState = ScreenState.Success,
-                            forecastWeatherList = forecastWeatherList,
-                            isRefreshing = false
-                        )
+                _uiState.postValue(
+                    uiState.value?.copy(
+                        screenState = ScreenState.Success,
+                        forecastWeatherList = forecastWeatherList,
+                        isRefreshing = false
                     )
-                }.catch {
-                    _uiState.postValue(
-                        uiState.value?.copy(
-                            screenState = ScreenState.Error,
-                            error = ForecastError.GENERIC,
-                            isRefreshing = false
-                        )
+                )
+            }.catch {
+                _uiState.postValue(
+                    uiState.value?.copy(
+                        screenState = ScreenState.Error,
+                        error = ForecastError.GENERIC,
+                        isRefreshing = false
                     )
-                }.flowOn(ioDispatcher).launchIn(viewModelScope)
+                )
+            }.flowOn(ioDispatcher).launchIn(viewModelScope)
         }, onLocationNotGranted = {
             showErrorNoLocationProvided()
         })

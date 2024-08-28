@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import dev.esteban.sportinggoods.R
-import dev.esteban.sportinggoods.databinding.ForecastItemBinding
 import dev.esteban.common.network.getFormattedSpeed
 import dev.esteban.common.network.getUrlImage
 import dev.esteban.common.network.getWindDirection
+import dev.esteban.sportinggoods.R
+import dev.esteban.sportinggoods.databinding.ForecastItemBinding
 import dev.esteban.weather.domain.model.ForecastWeather
 import kotlin.math.roundToInt
 

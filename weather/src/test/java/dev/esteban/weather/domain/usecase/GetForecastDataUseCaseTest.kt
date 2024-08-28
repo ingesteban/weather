@@ -1,15 +1,6 @@
 package dev.esteban.weather.domain.usecase
 
-import dev.esteban.common.network.convertLongToDay
-import dev.esteban.weather.data.datasource.remote.model.NetworkCityModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkCloudModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkCoordModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkForecastSysModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkForecastWeatherInfoModel
 import dev.esteban.weather.data.datasource.remote.model.NetworkForecastWeatherModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkMainModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkWeatherDetailModel
-import dev.esteban.weather.data.datasource.remote.model.NetworkWindModel
 import dev.esteban.weather.data.repository.WeatherRepository
 import dev.esteban.weather.domain.mapper.WeatherForecastMapper
 import dev.esteban.weather.domain.model.ForecastWeather
@@ -35,7 +26,8 @@ class GetForecastDataUseCaseTest {
     @Before
     fun setupBase() {
         MockKAnnotations.init(this)
-        getForecastDataUseCase = GetForecastDataUseCase(mockWeatherRepository, mockWeatherForecastMapper)
+        getForecastDataUseCase =
+            GetForecastDataUseCase(mockWeatherRepository, mockWeatherForecastMapper)
     }
 
     @After
@@ -64,7 +56,7 @@ class GetForecastDataUseCaseTest {
 
         val result = getForecastDataUseCase.invoke(40.0, -74.0).first()
 
-        coVerify {  mockWeatherRepository.getForecastWeather(any(), any()) }
+        coVerify { mockWeatherRepository.getForecastWeather(any(), any()) }
         verify { mockWeatherForecastMapper.getForecastWeatherList(any()) }
 
         assertEquals(expectedForecastWeatherList.take(5), result)
@@ -91,7 +83,7 @@ class GetForecastDataUseCaseTest {
 
         val result = getForecastDataUseCase.invoke(null, null).first()
 
-        coVerify {  mockWeatherRepository.getForecastWeather(null, null) }
+        coVerify { mockWeatherRepository.getForecastWeather(null, null) }
         verify { mockWeatherForecastMapper.getForecastWeatherList(any()) }
 
         assertEquals(expectedForecastWeatherList.take(5), result)
@@ -108,7 +100,7 @@ class GetForecastDataUseCaseTest {
 
         val result = getForecastDataUseCase.invoke(40.0, -74.0).first()
 
-        coVerify {  mockWeatherRepository.getForecastWeather(any(), any()) }
+        coVerify { mockWeatherRepository.getForecastWeather(any(), any()) }
         verify { mockWeatherForecastMapper.getForecastWeatherList(any()) }
 
         assertEquals(expectedForecastWeatherList.take(5), result)

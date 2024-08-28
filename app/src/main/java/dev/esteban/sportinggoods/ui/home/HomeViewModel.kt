@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.esteban.common.network.Dispatcher
 import dev.esteban.common.network.SportingGodsDispatchers
-import dev.esteban.common.utils.ScreenState
-import dev.esteban.sportinggoods.utils.LocationUtility
 import dev.esteban.common.network.getEndOfCurrentDay
 import dev.esteban.common.network.getStartOfCurrentDay
+import dev.esteban.common.utils.ScreenState
+import dev.esteban.sportinggoods.utils.LocationUtility
 import dev.esteban.weather.domain.usecase.GetWeatherDataUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
