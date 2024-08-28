@@ -4,8 +4,9 @@ import dev.esteban.common.network.convertLongToDay
 import dev.esteban.weather.data.datasource.remote.model.NetworkForecastWeatherInfoModel
 import dev.esteban.weather.data.datasource.remote.model.NetworkWeatherDetailModel
 import dev.esteban.weather.domain.model.ForecastWeather
+import javax.inject.Inject
 
-class WeatherForecastMapper {
+class WeatherForecastMapper @Inject constructor() {
 
     fun getForecastWeatherList(networkForecastWeatherInfoModelList: List<NetworkForecastWeatherInfoModel>): List<ForecastWeather> {
         val networkForecastWeatherList = networkForecastWeatherInfoModelList
