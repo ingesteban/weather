@@ -78,7 +78,6 @@ class ForecastFragment : Fragment() {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.forecastRecyclerView.visibility = View.GONE
                     binding.errorLayout.visibility = View.GONE
-
                 }
 
                 is ScreenState.Success -> {
@@ -116,7 +115,9 @@ class ForecastFragment : Fragment() {
                 }
 
                 is ScreenState.None -> {
-                    // TODO :
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.forecastRecyclerView.visibility = View.GONE
+                    binding.errorLayout.visibility = View.GONE
                 }
             }
         }
